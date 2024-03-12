@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DU_test.Controllers
 {
@@ -37,7 +38,7 @@ namespace DU_test.Controllers
             return Ok(offer);
         }
 
-        [HttpPost]
+        [HttpPost("authenticateAndRequestSimilarOffers")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -55,22 +56,24 @@ namespace DU_test.Controllers
                 return StatusCode(403);
             }
 
-            // Authenticate the driver
             var authenticatedDriver = DriverStore.DriverDetail.FirstOrDefault(d => d.username == driver.username && d.password == driver.password);
             if (authenticatedDriver == null)
             {
                 return StatusCode(401);
             }
 
-            var similarOffers = OffersStore.Offers.Where(o => o.JobOfferId == driver.offer).ToList();
+            var selectedOffer = OffersStore.Offers.FirstOrDefault(o => o.JobOfferId == driver.offer && o.JobStatus == "Open");
 
-            if (similarOffers.Count == 0)
+            if (selectedOffer == null)
             {
-                // If no similar offers found, return 404
+                
                 return NotFound();
             }
+            var similarOffers = OffersStore.Offers.Where(o => o.JobId == selectedOffer.JobId && o.JobOfferId != selectedOffer.JobOfferId && o.JobStatus == "Open").ToList();
 
-            return Ok(similarOffers); ;
+            similarOffers.Insert(0, selectedOffer);
+
+            return Ok(similarOffers);
         }
 
 

@@ -7,6 +7,7 @@ namespace DU_test.Data
         public static List<JobOffer> Offers = new List<JobOffer> {
             new JobOffer {id=1,
                 JobId=301,
+                JobStatus="Open",
                 JobOfferId="UEB12",
                 datetime = DateTime.Parse("2023-12-13"),
                 description = " Uber eats birmingham",
@@ -31,6 +32,7 @@ namespace DU_test.Data
             } },
             new JobOffer {id=2,
                 JobId=301,
+                JobStatus="Open",
                 JobOfferId="DS52",
                 datetime = DateTime.Parse("2023-12-1"),
                 description = " Delivoro birmingham",
@@ -56,6 +58,7 @@ namespace DU_test.Data
             },
             new JobOffer {id=3,
                 JobId=111,
+                JobStatus="In-Process",
                 JobOfferId="UEG12",
                 datetime = DateTime.Parse("2023-12-23"),
                 description = " Uber eats Glassgow",

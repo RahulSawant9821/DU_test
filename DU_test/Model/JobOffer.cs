@@ -6,6 +6,7 @@ namespace DU_test.Model
     {
         public int id {  get; set; }
         public int JobId {  get; set; }
+        public string JobStatus { get; set; }
         public string JobOfferId { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm:ss}", ApplyFormatInEditMode = true)]
