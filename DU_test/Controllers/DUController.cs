@@ -198,12 +198,12 @@ namespace DU_test.Controllers
             _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
         }
 
-        [HttpPost("requestGeocoding")]
+        [HttpPost("requestRouteAndEstimates")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<GeocodingResponse>> RequestGeocoding([FromBody] ServiceRoute serviceRoute)
+        public async Task<ActionResult<GeocodingResponse>> requestRouteAndEstimates([FromBody] ServiceRoute serviceRoute)
         {
-            if (serviceRoute == null || string.IsNullOrEmpty(serviceRoute.StartLocation) || string.IsNullOrEmpty(serviceRoute.EndLocation))
+            if (serviceRoute == null || string.IsNullOrEmpty(serviceRoute.StartLocation) || string.IsNullOrEmpty(serviceRoute.EndLocation) || string.IsNullOrEmpty(serviceRoute.transportMeans ))
             {
                 return BadRequest("Missing required parameters.");
             }
@@ -233,8 +233,20 @@ namespace DU_test.Controllers
 
                 var targetContent = await targetResponse.Content.ReadAsStringAsync();
                 var targetCoordinates = ExtractCoordinates(targetContent);
+                var transport = "driving"; 
+                                           
+                if (!string.IsNullOrEmpty(serviceRoute.transportMeans))
+                {
+                    transport = serviceRoute.transportMeans.ToLower() switch
+                    {
+                        "car" => "driving",
+                        "cycle" => "cycling",
+                        "walking" => "walking",
+                        _ => "driving", 
+                    };
+                }
 
-                var url = $"https://api.mapbox.com/directions/v5/mapbox/driving/{startCoordinates.Item2},{startCoordinates.Item1};{targetCoordinates.Item2},{targetCoordinates.Item1}?access_token={accessToken}";
+                var url = $"https://api.mapbox.com/directions/v5/mapbox/{transport}/{startCoordinates.Item2},{startCoordinates.Item1};{targetCoordinates.Item2},{targetCoordinates.Item1}?access_token={accessToken}&geometries=geojson";
 
                 using (var client = new HttpClient())
                 {
