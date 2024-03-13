@@ -2,11 +2,13 @@
 using DU_test.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 
 
@@ -232,12 +234,36 @@ namespace DU_test.Controllers
                 var targetContent = await targetResponse.Content.ReadAsStringAsync();
                 var targetCoordinates = ExtractCoordinates(targetContent);
 
-               
-                    return Ok(new GeocodingResponse
+                var url = $"https://api.mapbox.com/directions/v5/mapbox/driving/{startCoordinates.Item2},{startCoordinates.Item1};{targetCoordinates.Item2},{targetCoordinates.Item1}?access_token={accessToken}";
+
+                using (var client = new HttpClient())
                 {
-                    StartLocation = new LocationCoordinates { Latitude = startCoordinates.Item1, Longitude = startCoordinates.Item2 },
-                    EndLocation = new LocationCoordinates { Latitude = targetCoordinates.Item1, Longitude = targetCoordinates.Item2 }
-                });
+                    var response = await client.GetAsync(url);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = await response.Content.ReadAsStringAsync();
+                        var directionsResponse = JsonConvert.DeserializeObject<JObject>(content);
+
+                        var totalDistance = directionsResponse["routes"]?.First?["distance"]?.Value<double>() ?? 0;
+                        var totalTime = directionsResponse["routes"]?.First?["duration"]?.Value<double>() ?? 0;
+                       
+
+                        var routeInfo = new
+                        {
+                            Distance = totalDistance,
+                            Time = totalTime,
+                            Route = content
+                        };
+
+                        return Ok(routeInfo);
+                        
+                    }
+                    else
+                    {
+                        return StatusCode(StatusCodes.Status400BadRequest, "Error fetching route details.");
+                    }
+                }
+                
             }
             catch (Exception ex)
             {
