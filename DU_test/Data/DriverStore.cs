@@ -7,23 +7,20 @@ namespace DU_test.Data
         public static List<Driver> DriverDetail = new List<Driver> {
         new Driver{
             username = "arthur",
-            password = "password",
-            offer = ""
+            password = "password"
         },
          new Driver{
             username = "williams",
-            password = "1234@pass",
-            offer = ""
+            password = "1234@pass"
+           
         },
           new Driver{
             username = "raw",
-            password = "Olle@123",
-            offer = ""
+            password = "Olle@123"
         },
            new Driver{
             username = "victor",
-            password = "Password@dmin",
-            offer = ""
+            password = "Password@dmin"
         }
         };
         

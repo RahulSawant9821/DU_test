@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DU_test.Model.DTOs;
+using Microsoft.AspNetCore.Identity;
 
 namespace DU_test.Model
 {
@@ -9,7 +10,7 @@ namespace DU_test.Model
 
         public string password { get; set; }
 
-        public string offer { get; set; }
+        public JOffer jobOffers { get; set; }
 
     }
 }

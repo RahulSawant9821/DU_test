@@ -51,9 +51,9 @@ namespace DU_test.Controllers
                 return BadRequest(driver);
             }
 
-            if (driver.username == null || driver.password == null)
+            if (driver.username == null || driver.password == null || driver.jobOffers == null)
             {
-                return StatusCode(403);
+                return BadRequest(driver);
             }
 
             var authenticatedDriver = DriverStore.DriverDetail.FirstOrDefault(d => d.username == driver.username && d.password == driver.password);
@@ -62,12 +62,12 @@ namespace DU_test.Controllers
                 return StatusCode(401);
             }
 
-            var selectedOffer = OffersStore.Offers.FirstOrDefault(o => o.JobOfferId == driver.offer && o.JobStatus == "Open");
+            var selectedOffer = OffersStore.Offers.FirstOrDefault(o => o.JobOfferId == driver.jobOffers.JobOfferId && o.JobStatus == "Open");
 
             if (selectedOffer == null)
             {
                 
-                return NotFound();
+                return StatusCode(500);
             }
             var similarOffers = OffersStore.Offers.Where(o => o.JobId == selectedOffer.JobId && o.JobOfferId != selectedOffer.JobOfferId && o.JobStatus == "Open").ToList();
 
@@ -77,5 +77,30 @@ namespace DU_test.Controllers
         }
 
 
+        [HttpPost("SubmitSelected")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<JobOffer> SubmitSelected([FromBody] string JobOfferId)
+        {
+            if(JobOfferId == null)
+            {
+                return BadRequest(JobOfferId);
+            }
+
+            var Job = OffersStore.Offers.FirstOrDefault(u => u.JobOfferId == JobOfferId);
+            if (Job == null)
+            {
+                return NotFound();
+            }
+            Job.JobStatus = "In-Process";
+            return Ok(Job);
+        }
+
+
+
     }
+
 }

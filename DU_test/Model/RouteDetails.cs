@@ -2,9 +2,9 @@
 {
     public class RouteDetails
     {
-        public int RouteId { get; set; }
         public float estimatedDistance { get; set; }
-        public DateTime estimatedTime { get; set; }
-        public string routeInfo { get; set; }
+        public float estimatedTime { get; set; }
+      
+
     }
 }
