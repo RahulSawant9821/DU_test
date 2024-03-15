@@ -25,7 +25,7 @@ namespace DU_test.Data
                 },
                 Dropoff = new Address{
                     Street = "123 Main Street",
-                    City="Birmingham",
+                    City="London",
                     PostalCode = "B12 3AB",
                     State = "West Midlands",
                     Company=null
@@ -50,7 +50,7 @@ namespace DU_test.Data
                 },
                  Dropoff = new Address{
                     Street = "123 Main Street",
-                    City="Birmingham",
+                    City="Leicester",
                     PostalCode = "B12 3AB",
                     State = "West Midlands",
                     Company=null
@@ -76,7 +76,7 @@ namespace DU_test.Data
                 },
                 Dropoff = new Address{
                     Street = "123 Main Street",
-                    City="Glassgow",
+                    City="London",
                     PostalCode = "G12 3AB",
                     State = "West ",
                     Company=null
