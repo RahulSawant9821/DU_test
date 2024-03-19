@@ -133,7 +133,7 @@ namespace DU_test.Controllers
             try
             {
 
-                var accessToken = "pk.eyJ1IjoicmdzMjAwMCIsImEiOiJjbHRvb3doM3gwZ3BpMmpueXF6d2J4M3BiIn0.lAIuA0Mxk9bWQCPyQQrDVg";
+                var accessToken = "Your access Token over here";
 
                 var startUrl = $"https://api.mapbox.com/geocoding/v5/mapbox.places/{serviceRoute.StartLocation}.json?access_token={accessToken}";
                 var targetUrl = $"https://api.mapbox.com/geocoding/v5/mapbox.places/{serviceRoute.EndLocation}.json?access_token={accessToken}";
